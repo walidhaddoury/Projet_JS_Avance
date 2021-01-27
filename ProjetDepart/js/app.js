@@ -1,53 +1,139 @@
-const cartButton = document.querySelectorAll('.add-to-cart');
-const emptyCart = document.querySelector('#empty-cart');
-let cartTable = document.querySelector('#cart-table tbody');
-let productH4 = document.querySelectorAll('h4');
+document.addEventListener('DOMContentLoaded', loadLocalStorage);
+
+const cartButton = document.querySelectorAll('.add-to-cart'); // All buttons Add To Cart
+const emptyCart = document.querySelector('#empty-cart');  // Button to reset Cart
+const listCart = document.querySelector('#cart-table tbody'); // liste of product in Cart
+
+const productsTitle = document.querySelectorAll('.course__item .info__card h4');
+const productsImg = document.querySelectorAll('.course__item .course_img img');
+const productsPrice = document.querySelectorAll('.course__item .info__card .discount')
+
+//localStorage values
+let uxUI = localStorage.getItem('UX/UI');
+console.log(uxUI);
+let php = localStorage.getItem('php');
+console.log(php);
+let react = localStorage.getItem('react');
+console.log(react);
+let node = localStorage.getItem('node');
+console.log(node);
+let mySQL = localStorage.getItem('mySQL');
+console.log(mySQL);
 
 
-cartButton.forEach(function(buttonAdd){
-    buttonAdd.addEventListener('click', test);
-});
+for (let i = 0; i < cartButton.length; i++) {
+
+    const titleCart = productsTitle[i].innerText;
+    const priceCart = productsPrice[i].innerText;
+    const imgCart = productsImg[i].getAttribute('src');
 
 
+    cartButton[i].addEventListener('click', () => {
 
-// fonction de test
-function test(e){
+        const newProduct = document.createElement('tr');
 
-    let clickAdd = e.target;
-    let dataButton = clickAdd.getAttribute('data-id');
-    addToCart(dataButton);
+        let imgProduct = document.createElement('td');
+        let img = document.createElement('img');
+
+        let titleProduct = document.createElement('td');
+
+        let priceProduct = document.createElement('td');
+
+        let removeProduct = document.createElement('a');
+        removeProduct.addEventListener('click', removeFromCart);
+        let imgRemove = document.createElement('img');
+
+        let stock = document.createElement('td');
+
+        img.setAttribute('src', productsImg[i].getAttribute('src'));
+        imgProduct.appendChild(img);
+
+        imgRemove.setAttribute('src', './img/fermer.svg');
+        removeProduct.appendChild(imgRemove);
+
+        titleProduct.innerHTML = titleCart;
+        priceProduct.innerHTML = priceCart;
 
 
-    //console.log("coucou je suis la");
-    //console.log(clickAdd);
+        //console.log(titleCart);
+        //console.log(priceCart);
+        //console.log(imgCart);
+
+        switch (titleCart) {
+            case "UX/UI":
+                uxUI++;
+                localStorage.setItem('UX/UI', uxUI);
+                stock.innerHTML = localStorage.getItem('UX/UI');
+                break;
+            case "PHP 8":
+                php++;
+                localStorage.setItem('php', php);
+                stock.innerHTML = localStorage.getItem('php');
+                break;
+            case "React JS":
+                react++;
+                localStorage.setItem('react', react);
+                stock.innerHTML = localStorage.getItem('react');
+                break;
+            case "Node JS":
+                node++;
+                localStorage.setItem('node', node);
+                stock.innerHTML = localStorage.getItem('node');
+                break;
+            case "MySQL":
+                mySQL++;
+                localStorage.setItem('mySQL', mySQL);
+                stock.innerHTML = localStorage.getItem('mySQL');
+                break;
+            default:
+                break;
+        }
+
+        if (uxUI < 1 || php < 1 || react < 1 || node < 1 || mySQL < 1) {
+            newProduct.appendChild(imgProduct);
+            newProduct.appendChild(titleProduct);
+            newProduct.appendChild(priceProduct);
+            newProduct.appendChild(stock);
+            newProduct.appendChild(removeProduct);
+
+            listCart.appendChild(newProduct);
+        }
+
+    });
+
 }
 
-function addToCart(buttonId){
-    let newProduct = document.createElement('tr');
-    let img = document.createElement('img');
-    let quantité = document.createElement('p');
-    switch (buttonId) {
-        case "1":
-            newProduct.innerHTML = productH4[buttonId - 1].innerHTML;
-            img.setAttribute('src', 'img/courses/ux_ui.jpg')
-            console.log("TEST");
+function removeFromCart(e) {
+    let suppr = e.target.parentElement.parentElement;
+    let supprAtttribute = suppr.querySelectorAll('td');
+
+    switch (supprAtttribute[1].innerText) {
+        case "UX/UI":
+            uxUI--;
+            localStorage.setItem('UX/UI', uxUI);
             break;
-        case "2":
-            newProduct.textContent = `Produit : ${productH4[buttonId - 1].innerHTML}`;
+        case "PHP 8":
+            php--;
+            localStorage.setItem('php', php);
             break;
-        case "3":
-            newProduct.textContent = `Produit : ${productH4[buttonId - 1].innerHTML}`;
+        case "React JS":
+            react--;
+            localStorage.setItem('react', react);
             break;
-        case "4":
-            newProduct.textContent = `Produit : ${productH4[buttonId - 1].innerHTML}`;
+        case "Node JS":
+            node--;
+            localStorage.setItem('node', node);
             break;
-        case "5":
-            newProduct.textContent = `Produit : ${productH4[buttonId - 1].innerHTML}`;
+        case "MySQL":
+            mySQL--;
+            localStorage.setItem('mySQL', mySQL);
             break;
         default:
-            console.log("C PT");
             break;
     }
+    suppr.remove();
 
-    cartTable.appendChild(newProduct);
+    console.log(e.target.parentElement.parentElement.innerText);
+
+
 }
