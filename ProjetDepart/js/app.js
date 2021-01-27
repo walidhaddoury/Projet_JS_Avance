@@ -10,26 +10,15 @@ const productsTitle = document.querySelectorAll('.course__item .info__card h4');
 const productsImg = document.querySelectorAll('.course__item .course_img img');
 const productsPrice = document.querySelectorAll('.course__item .info__card .discount')
 
-//localStorage values
-let uxUI = localStorage.getItem('UX/UI');
-//console.log(uxUI);
-let php = localStorage.getItem('php');
-//console.log(php);
-let react = localStorage.getItem('react');
-//console.log(react);
-let node = localStorage.getItem('node');
-//console.log(node);
-let mySQL = localStorage.getItem('mySQL');
-//console.log(mySQL);
 
-
+// Load the cart with localStorage
 function loadLocalStorage() {
-    if (localStorage.getItem('Panier')) {
-        for (let i = 0; i < JSON.parse(localStorage.getItem('Panier').length); i++) {
-            const getTitle = JSON.parse(localStorage.getItem('Panier')[i].title);
-            const getPrice = JSON.parse(localStorage.getItem('Panier')[i].price);
-            const getImg = JSON.parse(localStorage.getItem('Panier')[i].img);
-            const getStock = JSON.parse(localStorage.getItem('Panier')[i].stock);
+    if (panier) {
+        for (let i = 0; i < panier.length; i++) {
+            let getTitle = panier[i].title;
+            let getPrice = panier[i].price;
+            let getImg = panier[i].img;
+            let getStock = panier[i].stock;
 
 
             const newProduct = document.createElement('tr');
@@ -62,15 +51,15 @@ function loadLocalStorage() {
 
             listCart.appendChild(newProduct);
 
-
-
         }
     }
-    console.log("Le panier dans le LocalStorage est vide !");
+    else {
+        console.log("Le panier dans le LocalStorage est vide !");
+    }
 }
 
 
-
+emptyCart.addEventListener('click', clearLocalStorage);
 
 
 for (let i = 0; i < cartButton.length; i++) {
@@ -90,11 +79,11 @@ for (let i = 0; i < cartButton.length; i++) {
         };
         panier.push(article);
 
-        localStorage.setItem('Panier', JSON.stringify(panier));
+        localStorage.setItem('Cart', JSON.stringify(panier));
 
-        console.log(titleCart);
-        console.log(priceCart);
-        console.log(imgCart);
+        //console.log(titleCart);
+        //console.log(priceCart);
+        //console.log(imgCart);
 
         const newProduct = document.createElement('tr');
 
@@ -129,72 +118,28 @@ for (let i = 0; i < cartButton.length; i++) {
 
         listCart.appendChild(newProduct);
 
-
-        //console.log(titleCart);
-        //console.log(priceCart);
-        //console.log(imgCart);
-        /*
-                switch (titleCart) {
-                    case "UX/UI":
-                        uxUI++;
-                        localStorage.setItem('UX/UI', uxUI);
-                        //stock.innerHTML = localStorage.getItem('UX/UI');
-                        break;
-                    case "PHP 8":
-                        php++;
-                        localStorage.setItem('php', php);
-                        //stock.innerHTML = localStorage.getItem('php');
-                        break;
-                    case "React JS":
-                        react++;
-                        localStorage.setItem('react', react);
-                        //stock.innerHTML = localStorage.getItem('react');
-                        break;
-                    case "Node JS":
-                        node++;
-                        localStorage.setItem('node', node);
-                        //stock.innerHTML = localStorage.getItem('node');
-                        break;
-                    case "MySQL":
-                        mySQL++;
-                        localStorage.setItem('mySQL', mySQL);
-                        //stock.innerHTML = localStorage.getItem('mySQL');
-                        break;
-                    default:
-                        break;
-                }
-        */
     });
 }
 
 
 function removeFromCart(e) {
     let suppr = e.target.parentElement.parentElement;
-    let supprAtttribute = suppr.querySelectorAll('td');
-
-    switch (supprAtttribute[1].innerText) {
-        case "UX/UI":
-            uxUI--;
-            localStorage.setItem('UX/UI', uxUI);
-            break;
-        case "PHP 8":
-            php--;
-            localStorage.setItem('php', php);
-            break;
-        case "React JS":
-            react--;
-            localStorage.setItem('react', react);
-            break;
-        case "Node JS":
-            node--;
-            localStorage.setItem('node', node);
-            break;
-        case "MySQL":
-            mySQL--;
-            localStorage.setItem('mySQL', mySQL);
-            break;
-        default:
-            break;
-    }
+    let index = e.target.parentElement.parentElement.rowIndex - 1;
+    panier.splice(index, 1);
+    console.log(index);
     suppr.remove();
+
+    localStorage.setItem('Cart', JSON.stringify(panier));
+
+    //let supprAtttribute = suppr.querySelectorAll('td');
+    //let test = panier.findIndex(i => i.title === supprAtttribute[1].innerHTML);
+    //console.log(test);
+    //console.log(panier.indexOf(supprAtttribute[1].innerHTML));
+
+}
+
+
+function clearLocalStorage() {
+    localStorage.clear();
+    listCart.remove();
 }
