@@ -7,12 +7,12 @@ searchInput.addEventListener('input', function(e) {
     input.toLowerCase();
     for (let i = 0; i < allCard.length; i++) {
         if (allTitle[i].innerText.toLowerCase().includes(input)) {
-            console.log(allTitle[i].innerText);
+            //console.log(allTitle[i].innerText);
             allCard[i].style.display = "block";
         }else{
             allCard[i].style.display = "none";
         }
         
     }
-    console.log(allCard);
+    //console.log(allCard);
 });

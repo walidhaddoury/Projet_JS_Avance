@@ -8,7 +8,12 @@ let panier = JSON.parse(localStorage.getItem('Cart')) || [];
 
 const productsTitle = document.querySelectorAll('.course__item .info__card h4');
 const productsImg = document.querySelectorAll('.course__item .course_img img');
-const productsPrice = document.querySelectorAll('.course__item .info__card .discount')
+const productsPrice = document.querySelectorAll('.course__item .info__card .discount');
+
+const body = document.querySelector('body');
+const notifContainer = document.createElement('ul');
+
+const allStocks = document.querySelectorAll('.stock');
 
 
 // Load the cart with localStorage
@@ -81,9 +86,6 @@ for (let i = 0; i < cartButton.length; i++) {
 
         localStorage.setItem('Cart', JSON.stringify(panier));
 
-        //console.log(titleCart);
-        //console.log(priceCart);
-        //console.log(imgCart);
 
         const newProduct = document.createElement('tr');
 
@@ -118,7 +120,9 @@ for (let i = 0; i < cartButton.length; i++) {
 
         listCart.appendChild(newProduct);
 
-        displayNotif(titleCart, true);;
+        console.log(allStocks[i].innerText);
+
+        displayNotif(titleCart, "ajout");;
 
     });
 }
@@ -129,15 +133,14 @@ function removeFromCart(e) {
     let index = e.target.parentElement.parentElement.rowIndex - 1;
 
     let supprAtttribute = suppr.querySelectorAll('td');
-    let titleAttribute = panier.findIndex(i => i.title === supprAtttribute[1].innerHTML);
 
     panier.splice(index, 1);
     suppr.remove();
 
     localStorage.setItem('Cart', JSON.stringify(panier));
 
-    displayNotif(titleAttribute, false);
-    
+    displayNotif(supprAtttribute[1].innerHTML, "supression");
+
     //console.log(test);
     //console.log(panier.indexOf(supprAtttribute[1].innerHTML));
 
@@ -146,19 +149,18 @@ function removeFromCart(e) {
 
 function clearLocalStorage() {
     //localStorage.clear();
+    displayNotif("", "");
     panier = [];
     localStorage.setItem('Cart', JSON.stringify(panier));
     listCart.remove();
     document.location.reload();
 }
 
-function displayNotif(title, event){
 
-    const body = document.querySelector('body');
-    const notifContainer = document.createElement('div');
+function displayNotif(title, event) {
     notifContainer.setAttribute('id', 'notification_container');
 
-    const content = document.createElement('div');
+    const content = document.createElement('li');
     content.setAttribute('class', 'content');
 
     const notifImg = document.createElement('img');
@@ -166,14 +168,16 @@ function displayNotif(title, event){
 
     const notifText = document.createElement('p');
 
-    if (event){
+    if (event === 'ajout') {
         // display AJOUT DANS LE PANIER
-        notifText.innerHTML = title + 'à été ajouté au panier';
+        notifText.innerHTML = `${title} a été ajouté au panier`;
         console.log("AJOUT DANS LE PANIER");
-    }else{
+    } else if (event === 'supression') {
         // display SUPRESSION DU PANIER
-        notifText.innerHTML = title + 'à été retiré du panier';
+        notifText.innerHTML = `${title} a été retiré du panier`;
         console.log("SUPRESSION DU PANIER");
+    } else {
+        notifText.innerHTML = `Le panier à été vidé !`;
     }
 
     content.appendChild(notifImg);
@@ -181,8 +185,8 @@ function displayNotif(title, event){
     notifContainer.appendChild(content);
     body.appendChild(notifContainer);
 
-    setTimeout(function() {
-        
+    setTimeout(function () {
+        notifContainer.removeChild(content);
     }, 3000);
 
 }

@@ -242,8 +242,6 @@ header .submenu:hover #cart::-webkit-scrollbar-thumb:hover {background: #555;}
   position: fixed;
   top: 40px;
   right: 25px;
-  display: flex;
-  flex-direction: column;
 
   width: 200px;
   height: auto;
