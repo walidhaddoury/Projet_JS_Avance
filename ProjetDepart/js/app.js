@@ -1,15 +1,18 @@
 document.addEventListener('DOMContentLoaded', loadLocalStorage); // Au chargement de la page lance la fonction LoadLocalStorage pour mettre a jour le panier
-//document.addEventListener('DOMContentLoaded', loadStockJSON);
 const allButtonAddToCart = document.querySelectorAll('.add-to-cart'); // All buttons Add To Cart
 const emptyCart = document.querySelector('#empty-cart');  // Button to reset Cart
 const listCart = document.querySelector('#cart-table tbody'); // liste of product in Cart
 
-let panier = JSON.parse(localStorage.getItem('Cart')) || []; // Initialise
-let stockJSON = JSON.parse(localStorage.getItem('Stocks')) || [];
+let panier = JSON.parse(localStorage.getItem('Cart')) || []; // Récupère le JSON dans le LocalStorage et le stock dans "panier"
+let stockJSON = localStorage.getItem('Stocks') || [];
 
-const productsTitle = document.querySelectorAll('.course__item .info__card h4');
-const productsImg = document.querySelectorAll('.course__item .course_img img');
-const productsPrice = document.querySelectorAll('.course__item .info__card .discount');
+const productsTitle = document.querySelectorAll('.course__item .info__card h4'); // get tout les h4
+const productsImg = document.querySelectorAll('.course__item .course_img img'); // get toutes les images des cours
+const productsPrice = document.querySelectorAll('.course__item .info__card .discount'); // get tout les prix des cours 
+
+///
+const productStock = document.querySelectorAll('.stock');
+///
 
 const body = document.querySelector('body');
 const notifContainer = document.createElement('ul');
@@ -58,58 +61,11 @@ function loadLocalStorage() {
             listCart.appendChild(newProduct);
 
         }
-        loadStockJSON();
     }
     else {
         console.log("Le panier dans le LocalStorage est vide !");
     }
 }
-
-function loadStockJSON() {
-    if (panier.length) {
-        let uxNb = 0;
-        let phpNb = 0;
-        let reactNb = 0;
-        let nodeNb = 0;
-        let sqlNb = 0;
-        for (let i = 0; i < panier.length; i++) {
-            switch (i) {
-                case panier[i].title === "Node JS":
-                    nodeNb++;
-                    break;
-                case panier[i].title === "React JS":
-                    reactNb++;
-                    break;
-                case panier[i].title === "PHP 8":
-                    phpNb++;
-                    break;
-                case panier[i].title === "UX/UI":
-                    uxNb++;
-                    break;
-                case panier[i].title === "MySQL":
-                    sqlNb++;
-                    break;
-                default:
-                    break;
-            }
-        }
-        console.log("NODE", nodeNb);
-        let stock = {
-            uiUx: uxNb,
-            php: phpNb,
-            react: reactNb,
-            node: nodeNb,
-            sql: sqlNb
-        }
-    
-        stockJSON.push(stock);
-        localStorage.setItem('Stocks', JSON.stringify(stockJSON));
-
-    } else {
-        console.log("Les stocks sont plein !");
-    }
-}
-
 
 for (let i = 0; i < allButtonAddToCart.length; i++) {
 
@@ -123,7 +79,13 @@ for (let i = 0; i < allButtonAddToCart.length; i++) {
         createJSON(imgCart, titleCart, priceCart);
         createHTML(titleCart, priceCart, imgCart);
         displayNotif(titleCart, "ajout");
-        updateStock(i);
+
+        if (parseInt(productStock[i].textContent) === 0) {
+            productStock[i].parentElement.innerText = 'Article en rupture de stock !';
+            allButtonAddToCart[i].classList.add('disabled');
+        } else {
+            productStock[i].textContent = parseInt(productStock[i].textContent) - 1;
+        }
         loadStockJSON();
 
     });
@@ -142,19 +104,12 @@ function createJSON(imgCart, titleCart, priceCart) {
     localStorage.setItem('Cart', JSON.stringify(panier));
 }
 
-/*
-function createStockJSON(uxNb, phpNbNb, reactNb, nodeNb, sqlNb) {
-    let stock = {
-        uiUx: uxNb,
-        phpNb: phpNbNb,
-        react: reactNb,
-        node: nodeNb,
-        sql: sqlNb
-    }
-
-    stockJSON.push(stock);
-}*/
-
+/**
+ * create a new "tr" and add the data in it and display it in the cart
+ * @param {String} titleCart get title
+ * @param {String} priceCart get price 
+ * @param {String} imgCart get link of img
+ */
 function createHTML(titleCart, priceCart, imgCart) {
     const newProduct = document.createElement('tr');
 
@@ -190,7 +145,10 @@ function createHTML(titleCart, priceCart, imgCart) {
     listCart.appendChild(newProduct);
 }
 
-
+/**
+ * Remove a product from the cart
+ * @param {*} e  event
+ */
 function removeFromCart(e) {
     let suppr = e.target.parentElement.parentElement;
     let index = e.target.parentElement.parentElement.rowIndex - 1;
@@ -205,13 +163,11 @@ function removeFromCart(e) {
     displayNotif(supprAtttribute[1].textContent, "supression");
 
     updateStockDelete(supprAtttribute[1].textContent);
-
-    //console.log(test);
-    //console.log(panier.indexOf(supprAtttribute[1].innerHTML));
-
 }
 
-
+/**
+ * reset array "panier", display a notification, reset the cart and reload the page
+ */
 function clearLocalStorage() {
     //localStorage.clear();
     displayNotif("", "");
@@ -223,7 +179,11 @@ function clearLocalStorage() {
     document.location.reload();
 }
 
-
+/**
+ * Create a "li" with data and display it for 3s
+ * @param {String} title the title of the card concerned
+ * @param {String} event "ajout" "supression" or ""
+ */
 function displayNotif(title, event) {
     notifContainer.setAttribute('id', 'notification_container');
 
@@ -238,11 +198,9 @@ function displayNotif(title, event) {
     if (event === 'ajout') {
         // display AJOUT DANS LE PANIER
         notifText.innerHTML = `${title} a été ajouté au panier`;
-        console.log("AJOUT DANS LE PANIER");
     } else if (event === 'supression') {
         // display SUPRESSION DU PANIER
         notifText.innerHTML = `${title} a été retiré du panier`;
-        console.log("SUPRESSION DU PANIER");
     } else {
         notifText.innerHTML = `Le panier à été vidé !`;
     }
@@ -255,33 +213,50 @@ function displayNotif(title, event) {
     setTimeout(function () {
         notifContainer.removeChild(content);
     }, 3000);
-
-}
-
-function updateStock(index) {
-    const allStock = document.querySelectorAll('.stock');
-
-    let nb = (parseInt(allStock[index].textContent));
-
-    allStock[index].textContent = nb - 1;
 }
 
 
+/**
+ * the function update the stocks of the course concerned
+ * @param {String} type Name of the cours deleted in the cart
+ */
 function updateStockDelete(type) {
     const allStock = document.querySelectorAll('.stock');
 
     let index = null;
 
     for (let i = 0; i < productsTitle.length; i++) {
-        console.log(productsTitle[i]);
         if (productsTitle[i].textContent === type) {
             index = i;
             break;
         }
     }
 
-    let nb = (parseInt(allStock[index].textContent));
+    
+    console.log("etape 1");
+    console.log(allStock[index].textContent);
+    if (allStock[index].textContent === 'Article en rupture de stock !') {
+        console.log('GGGGGGGGGGGG')
+        allStock[index].textContent = "1";
+        allButtonAddToCart[index].classList.remove('disabled');
+    } else {
+        let nb = (parseInt(allStock[index].textContent));
+        allStock[index].textContent = nb + 1;
+    }
 
-    allStock[index].textContent = nb + 1;
+    loadStockJSON();
 }
 
+function loadStockJSON() {
+    localStorage.setItem('Stocks', '[]');
+    stockJSON = [];
+    for (let i = 0; i < allButtonAddToCart.length; i++) {
+        console.log(productStock[i]);
+        let stock = {
+            title: productsTitle[i].textContent,
+            stock: productStock[i].textContent,
+        }
+        stockJSON.push(stock);
+        localStorage.setItem('Stocks', JSON.stringify(stockJSON));
+    }
+}

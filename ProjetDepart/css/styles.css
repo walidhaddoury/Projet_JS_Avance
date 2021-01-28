@@ -283,3 +283,11 @@ a img {
   margin-top: 25px;
   width: 20px;
 }
+
+/* Disable */
+.disabled{
+  cursor:not-allowed;
+}
+.disabled:active{
+  pointer-events: none;
+}
