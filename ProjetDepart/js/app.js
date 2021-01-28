@@ -118,6 +118,8 @@ for (let i = 0; i < cartButton.length; i++) {
 
         listCart.appendChild(newProduct);
 
+        displayNotif(titleCart, true);;
+
     });
 }
 
@@ -125,14 +127,17 @@ for (let i = 0; i < cartButton.length; i++) {
 function removeFromCart(e) {
     let suppr = e.target.parentElement.parentElement;
     let index = e.target.parentElement.parentElement.rowIndex - 1;
+
+    let supprAtttribute = suppr.querySelectorAll('td');
+    let titleAttribute = panier.findIndex(i => i.title === supprAtttribute[1].innerHTML);
+
     panier.splice(index, 1);
-    console.log(index);
     suppr.remove();
 
     localStorage.setItem('Cart', JSON.stringify(panier));
 
-    //let supprAtttribute = suppr.querySelectorAll('td');
-    //let test = panier.findIndex(i => i.title === supprAtttribute[1].innerHTML);
+    displayNotif(titleAttribute, false);
+    
     //console.log(test);
     //console.log(panier.indexOf(supprAtttribute[1].innerHTML));
 
@@ -140,6 +145,44 @@ function removeFromCart(e) {
 
 
 function clearLocalStorage() {
-    localStorage.clear();
+    //localStorage.clear();
+    panier = [];
+    localStorage.setItem('Cart', JSON.stringify(panier));
     listCart.remove();
+    document.location.reload();
+}
+
+function displayNotif(title, event){
+
+    const body = document.querySelector('body');
+    const notifContainer = document.createElement('div');
+    notifContainer.setAttribute('id', 'notification_container');
+
+    const content = document.createElement('div');
+    content.setAttribute('class', 'content');
+
+    const notifImg = document.createElement('img');
+    notifImg.setAttribute('src', './img/info.png');
+
+    const notifText = document.createElement('p');
+
+    if (event){
+        // display AJOUT DANS LE PANIER
+        notifText.innerHTML = title + 'à été ajouté au panier';
+        console.log("AJOUT DANS LE PANIER");
+    }else{
+        // display SUPRESSION DU PANIER
+        notifText.innerHTML = title + 'à été retiré du panier';
+        console.log("SUPRESSION DU PANIER");
+    }
+
+    content.appendChild(notifImg);
+    content.appendChild(notifText);
+    notifContainer.appendChild(content);
+    body.appendChild(notifContainer);
+
+    setTimeout(function() {
+        
+    }, 3000);
+
 }
