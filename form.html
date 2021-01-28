@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Goldman" rel="stylesheet">
+    <link rel="stylesheet" href="form.css">
+    <title>Cours en ligne</title>
+</head>
+
+<body>
+    <header>
+        <div>
+            <a class="button-menu" href="./ProjetDepart/index.html">Cours en ligne</a>
+        </div>
+    </header>
+    <div class="form">
+        <form action="" method="POST">
+            <div class="place">
+                <input name="nom" class="lastName input" type="text" maxlength="24" placeholder="Nom" required>
+            </div>
+            <div class="place">
+                <input name="prenom" class="name input" type="text" placeholder="Prénom" required>
+            </div>
+            <div class="place">
+                <input name="adresse" class="adresse input" type="text" placeholder="Adresse" required>
+            </div>
+            <div class="place">
+                <input name="mail" class="mail input" type="email" placeholder="E-mail" required>
+            </div>
+            <div class="place">
+                <input name="phone" class="phone input" type="tel" placeholder="Téléphone" required>
+            </div>
+            <div class="place">
+                <input name="carteBancaire" class="carteBancaire input" type="number" placeholder="Carte Bancaire" required>
+            </div>
+            <div id="buttons">
+                <a class="button" href="./ProjetDepart/index.html">Annuler</a>
+                <input class="button submitButton" type="submit" value="Valider" />
+            </div>
+        </form>
+    </div>
+
+
+</body>
+<script src="form.js"></script>
+
+</html>
