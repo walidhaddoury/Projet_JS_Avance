@@ -7,7 +7,7 @@ searchInput.addEventListener('keyup', function(e) {
 
     let input = searchInput.value;
     input.toLowerCase();
-    
+
     for (let i = 0; i < allCard.length; i++) {
         if (allTitle[i].innerText.toLowerCase().includes(input)) {
             allCard[i].style.display = "block";
@@ -16,8 +16,7 @@ searchInput.addEventListener('keyup', function(e) {
             
         }
         if (allCard.length){
-            hidden.style.display = "block !important";
-            console.log(hidden);
+            hidden.className = "pop";
         }
     }
 
