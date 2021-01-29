@@ -11,31 +11,37 @@
 <body>
     <header>
         <div>
-            <a class="button-menu" href="index.html">Cours en ligne</a>
+            <a class="button-menu" href="./ProjetDepart/index.html">Cours en ligne</a>
         </div>
     </header>
     <div class="form">
         <form action="" method="POST">
             <div class="place">
-                <input name="nom" class="lastName input" type="text" maxlength="24" placeholder="Nom" required>
+                <input name="nom" class="lastName input" type="text" maxlength="24" placeholder="Nom" >
             </div>
+            <p>Champ obligatoire.</p>
             <div class="place">
-                <input name="prenom" class="name input" type="text" placeholder="Prénom" required>
+                <input name="prenom" class="name input" type="text" placeholder="Prénom" >
             </div>
+            <p>Champ obligatoire.</p>
             <div class="place">
-                <input name="adresse" class="adresse input" type="text" placeholder="Adresse" required>
+                <input name="adresse" class="adresse input" type="text" placeholder="Adresse" >
             </div>
+            <p>Champ obligatoire.</p>
             <div class="place">
-                <input name="mail" class="mail input" type="email" placeholder="E-mail" required>
+                <input name="mail" class="mail input" type="email" placeholder="E-mail" >
             </div>
+            <p>Veuillez rentrer un email valide.</p>
             <div class="place">
-                <input name="phone" class="phone input" type="tel" placeholder="Téléphone" required>
+                <input name="phone" class="phone input" type="tel" placeholder="Téléphone" >
             </div>
+            <p>Veuillez rentrer un numéro de téléphone valide.</p>
             <div class="place">
-                <input name="carteBancaire" class="carteBancaire input" type="number" placeholder="Carte Bancaire" required>
+                <input name="carteBancaire" class="carteBancaire input" type="int" placeholder="Carte Bancaire" >
             </div>
+            <p>Veuillez rentrer un numéro de carte bancaire valide.</p>
             <div id="buttons">
-                <a class="button" href="index.html">Annuler</a>
+                <a class="button" href="./ProjetDepart/index.html">Annuler</a>
                 <input class="button submitButton" type="submit" value="Valider" />
             </div>
         </form>
