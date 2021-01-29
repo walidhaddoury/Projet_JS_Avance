@@ -4,7 +4,6 @@ const emptyCart = document.querySelector('#empty-cart');  // Button to reset Car
 const listCart = document.querySelector('#cart-table tbody'); // liste of product in Cart
 
 let panier = JSON.parse(localStorage.getItem('Cart')) || []; // Récupère le JSON dans le LocalStorage et le stock dans "panier"
-let stockJSON = localStorage.getItem('Stocks') || [];
 
 const productsTitle = document.querySelectorAll('.course__item .info__card h4'); // get tout les h4
 const productsImg = document.querySelectorAll('.course__item .course_img img'); // get toutes les images des cours
@@ -29,6 +28,7 @@ function loadLocalStorage() {
             let getImg = panier[i].img;
             let getStock = panier[i].stock;
 
+            console.log(getTitle);
 
             const newProduct = document.createElement('tr');
 
@@ -60,6 +60,14 @@ function loadLocalStorage() {
 
             listCart.appendChild(newProduct);
 
+            for (let y = 0; y < productsTitle.length; y++){
+                console.log(productsTitle[y].textContent);
+                if (getTitle === productsTitle[y].textContent){
+                    console.log("================");
+                    productStock[y].textContent = parseInt(productStock[y].textContent) - 1;
+                    console.log(productStock[y].textContent);
+                }
+            }
         }
     }
     else {
@@ -73,21 +81,13 @@ for (let i = 0; i < allButtonAddToCart.length; i++) {
     const priceCart = productsPrice[i].innerText;
     const imgCart = productsImg[i].getAttribute('src');
 
+    console.log(productStock[i].textContent);
 
     allButtonAddToCart[i].addEventListener('click', () => {
-
         createJSON(imgCart, titleCart, priceCart);
         createHTML(titleCart, priceCart, imgCart);
         displayNotif(titleCart, "ajout");
-
-        if (parseInt(productStock[i].textContent) === 0) {
-            productStock[i].parentElement.innerText = 'Article en rupture de stock !';
-            allButtonAddToCart[i].classList.add('disabled');
-        } else {
-            productStock[i].textContent = parseInt(productStock[i].textContent) - 1;
-        }
-        loadStockJSON();
-
+        updateCourses("add", i);
     });
 }
 
@@ -162,7 +162,11 @@ function removeFromCart(e) {
 
     displayNotif(supprAtttribute[1].textContent, "supression");
 
-    updateStockDelete(supprAtttribute[1].textContent);
+    for (let i = 0; i < productsTitle.length; i++){
+        if (productsTitle[i].innerText === suppr[1].innerText){
+            updateCourses("remove", i);
+        }
+    }
 }
 
 /**
@@ -172,9 +176,7 @@ function clearLocalStorage() {
     //localStorage.clear();
     displayNotif("", "");
     panier = [];
-    stockJSON = [];
     localStorage.setItem('Cart', JSON.stringify(panier));
-    localStorage.setItem('Stocks', JSON.stringify(stockJSON));
     listCart.remove();
     document.location.reload();
 }
@@ -216,47 +218,26 @@ function displayNotif(title, event) {
 }
 
 
-/**
- * the function update the stocks of the course concerned
- * @param {String} type Name of the cours deleted in the cart
- */
-function updateStockDelete(type) {
-    const allStock = document.querySelectorAll('.stock');
+function updateCourses(action, index){
+    const allCoursesContainer = document.querySelectorAll('.courses__container');
+    const courseItem = allCoursesContainer[1].children;
 
-    let index = null;
-
-    for (let i = 0; i < productsTitle.length; i++) {
-        if (productsTitle[i].textContent === type) {
-            index = i;
-            break;
-        }
+    // On verifie si c'est une incrémentation ou une décrémentation du stock
+    if (action === "add") {
+        console.log("ADD");
+        productStock[index].textContent = parseInt(productStock[index].textContent) - 1;
+    }
+    if (action === "remove") {
+        console.log('REMOVE');
+        productStock[index].textContent = parseInt(productStock[index].textContent) + 1;
     }
 
-    
-    console.log("etape 1");
-    console.log(allStock[index].textContent);
-    if (allStock[index].textContent === 'Article en rupture de stock !') {
-        console.log('GGGGGGGGGGGG')
-        allStock[index].textContent = "1";
-        allButtonAddToCart[index].classList.remove('disabled');
+    // Si le stock arrive à 0, retire le cours en question
+    if (parseInt(productStock[index].textContent) === 0) {
+        console.log('DISABLE BUTTON');
+        allButtonAddToCart[index].classList.add('disabled');
     } else {
-        let nb = (parseInt(allStock[index].textContent));
-        allStock[index].textContent = nb + 1;
-    }
-
-    loadStockJSON();
-}
-
-function loadStockJSON() {
-    localStorage.setItem('Stocks', '[]');
-    stockJSON = [];
-    for (let i = 0; i < allButtonAddToCart.length; i++) {
-        console.log(productStock[i]);
-        let stock = {
-            title: productsTitle[i].textContent,
-            stock: productStock[i].textContent,
-        }
-        stockJSON.push(stock);
-        localStorage.setItem('Stocks', JSON.stringify(stockJSON));
+        console.log("RESTORE BUTTON");
+        allButtonAddToCart[index].classList.remove('disabled');
     }
 }

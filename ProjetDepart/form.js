@@ -4,9 +4,9 @@ let inpAdress = document.querySelector('.adresse');
 let inpMail = document.querySelector('.mail');
 let inpPhone = document.querySelector('.phone');
 let inpCreditCard = document.querySelector('.carteBancaire');
-
+let validateButton = document.querySelector('#submit');
 let errorText = document.querySelectorAll("p");
-console.log(errorText)
+let endSpan = document.querySelector('#ok')
 
 inpFName.addEventListener('input', function(e) { 
     let input = inpFName.value;
@@ -90,3 +90,16 @@ inpCreditCard.addEventListener('input', function(e) {
         errorText[5].style.display = "block";
     }
 });
+
+validateButton.addEventListener('click', function(e) {
+    errorText.forEach(element => {
+        if(element.style.display ==="block"){
+            endSpan.style.display = "block"
+        }
+        if(endSpan.style.display != 'block'){
+        window.location.href = "oui.html"
+        }
+    });
+
+
+})

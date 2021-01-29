@@ -1,0 +1,12 @@
+body {
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.tenor-gif-embed {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}

@@ -8,8 +8,6 @@ const COURSES = {
   5: { id: 5, img: 'my_sql.png', title: 'MySQL', initial_price: 200, price: 9.99, mark: 4, stock: 2 }
 }
 
-
-
 Object.keys(COURSES).forEach(key => {
 
   let id = COURSES[key].id;
