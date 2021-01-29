@@ -9,13 +9,10 @@ const productsTitle = document.querySelectorAll('.course__item .info__card h4');
 const productsImg = document.querySelectorAll('.course__item .course_img img'); // get toutes les images des cours
 const productsPrice = document.querySelectorAll('.course__item .info__card .discount'); // get tout les prix des cours 
 
-///
 const productStock = document.querySelectorAll('.stock');
-///
 
 const body = document.querySelector('body');
 const notifContainer = document.createElement('ul');
-
 
 emptyCart.addEventListener('click', clearLocalStorage);
 
@@ -91,7 +88,12 @@ for (let i = 0; i < allButtonAddToCart.length; i++) {
     });
 }
 
-
+/**
+ * create a JSON to push in LocalStorage
+ * @param {String} imgCart path img course
+ * @param {String} titleCart title of course
+ * @param {String} priceCart price of course
+ */
 function createJSON(imgCart, titleCart, priceCart) {
     let article = {
         img: imgCart,
@@ -217,27 +219,27 @@ function displayNotif(title, event) {
     }, 3000);
 }
 
-
+/**
+ * update Stock of the course
+ * @param {String} action type of action
+ * @param {Int} index index of course to modify
+ */
 function updateCourses(action, index){
     const allCoursesContainer = document.querySelectorAll('.courses__container');
     const courseItem = allCoursesContainer[1].children;
 
     // On verifie si c'est une incrémentation ou une décrémentation du stock
     if (action === "add") {
-        console.log("ADD");
         productStock[index].textContent = parseInt(productStock[index].textContent) - 1;
     }
     if (action === "remove") {
-        console.log('REMOVE');
         productStock[index].textContent = parseInt(productStock[index].textContent) + 1;
     }
 
     // Si le stock arrive à 0, retire le cours en question
     if (parseInt(productStock[index].textContent) === 0) {
-        console.log('DISABLE BUTTON');
         allButtonAddToCart[index].classList.add('disabled');
     } else {
-        console.log("RESTORE BUTTON");
         allButtonAddToCart[index].classList.remove('disabled');
     }
 }
