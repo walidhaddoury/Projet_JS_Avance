@@ -163,7 +163,7 @@ function removeFromCart(e) {
     displayNotif(supprAtttribute[1].textContent, "supression");
 
     for (let i = 0; i < productsTitle.length; i++){
-        if (productsTitle[i].innerText === suppr[1].innerText){
+        if (productsTitle[i].innerText === supprAtttribute[1].innerText){
             updateCourses("remove", i);
         }
     }
